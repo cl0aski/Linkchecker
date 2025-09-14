@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkChecker</title>
+    <style>
+        /* Basic CSS reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body and Background styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0d0d0d;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Main container for the website */
+        .container {
+            text-align: center;
+            background-color: rgba(30, 30, 30, 0.9);
+            padding: 60px 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 60px rgba(255, 255, 255, 0.2);
+            width: 450px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 80px rgba(0, 255, 153, 0.7);
+        }
+
+        /* Logo styling */
+        .logo {
+            font-size: 36px;
+            color: #0aff99;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0, 255, 153, 0.5);
+        }
+
+        /* Title styling */
+        h1 {
+            font-size: 32px;
+            letter-spacing: 2px;
+            color: #0aff99;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0, 255, 153, 0.5);
+        }
+
+        /* Input field for the URL */
+        .input-field {
+            margin-bottom: 30px;
+        }
+
+        .input-field input[type="url"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            background-color: #101010;
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        .input-field input[type="url"]:focus {
+            border-color: #0aff99;
+        }
+
+        /* Dropdown for selecting social media platform */
+        .platform-select select {
+            width: 100%;
+            padding: 15px;
+            background-color: #101010;
+            color: #fff;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            font-size: 16px;
+            margin-bottom: 30px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        .platform-select select:focus {
+            border-color: #0aff99;
+        }
+
+        /* Button styling */
+        .btn {
+            background-color: #0aff99;
+            border: none;
+            padding: 15px 30px;
+            color: #000;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 0 15px rgba(0, 255, 153, 0.5);
+        }
+
+        /* Button hover effect */
+        .btn:hover {
+            background-color: #0cff77;
+            transform: scale(1.05);
+        }
+
+        /* Validation message styling */
+        .validation-message {
+            margin-top: 20px;
+            font-size: 18px;
+            transition: opacity 0.5s, transform 0.5s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .valid {
+            color: #0aff99;
+            animation: fadeIn 0.5s forwards, celebrate 1.5s infinite;
+        }
+
+        .invalid {
+            color: red;
+            animation: fadeIn 0.5s forwards, sadAnimation 1.5s infinite;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes sadAnimation {
+            0% { transform: translateY(0); }
+            25% { transform: translateY(5px); }
+            50% { transform: translateY(-5px); }
+            75% { transform: translateY(3px); }
+            100% { transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="logo">🔒</div>
+    <h1>LinkChecker</h1>
+
+    <!-- Input field for URL -->
+    <div class="input-field">
+        <input type="url" id="urlInput" placeholder="Enter a URL..." required>
+    </div>
+
+    <!-- Dropdown to select social media platform -->
+    <div class="platform-select">
+        <select id="platformSelect">
+            <option value="default">Select Social Media Platform</option>
+            <option value="instagram">Instagram</option>
+            <option value="facebook">Facebook</option>
+            <option value="x">X (formerly Twitter)</option>
+            <option value="linkedin">LinkedIn</option>
+        </select>
+    </div>
+
+    <!-- Submit button -->
+    <button class="btn" onclick="validateURL()">Validate URL</button>
+
+    <!-- Validation message -->
+    <div id="validationMessage" class="validation-message"></div>
+</div>
+
+<script>
+    function validateURL() {
+        const urlInput = document.getElementById('urlInput').value.trim();
+        const validationMessage = document.getElementById('validationMessage');
+        const platformSelect = document.getElementById('platformSelect').value;
+
+        validationMessage.classList.remove('valid', 'invalid'); // Reset classes
+        validationMessage.style.opacity = 0; // Hide message
+
+        if (!urlInput) {
+            validationMessage.textContent = '🚨 Please enter a URL.';
+            validationMessage.classList.add('invalid');
+            validationMessage.style.opacity = 1;
+            return;
+        }
+
+        if (platformSelect === "default") {
+            validationMessage.textContent = '🚨 Please select a social media platform.';
+            validationMessage.classList.add('invalid');
+            validationMessage.style.opacity = 1;
+            return;
+        }
+
+        // Simple validation logic
+        const socialMediaUrls = {
+            instagram: 'https://www.instagram.com',
+            facebook: 'https://www.facebook.com',
+            x: 'https://www.x.com',
+            linkedin: 'https://www.linkedin.com'
+        };
+
+        if (urlInput.startsWith(socialMediaUrls[platformSelect])) {
+            validationMessage.textContent = '🎉 Hooray! Valid URL! 🎉';
+            validationMessage.classList.add('valid');
+        } else {
+            validationMessage.textContent = '😢 Oops! Invalid URL. Please try again.';
+            validationMessage.classList.add('invalid');
+        }
+
+        // Trigger animation
+        validationMessage.style.opacity = 1;
+        validationMessage.style.transform = 'translateY(0)';
+    }
+</script>
+
+</body>
+</html>
